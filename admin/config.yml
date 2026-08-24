@@ -1,0 +1,26 @@
+backend:
+  name: git-gateway
+  branch: main
+
+local_backend: false
+
+media_folder: "images"
+public_folder: "images"
+
+collections:
+  - name: "projects"
+    label: "المشاريع والكتب"
+    files:
+      - label: "قائمة المشاريع"
+        name: "projects_list"
+        file: "projects.json"
+        fields:
+          - label: "المشاريع المضافة"
+            name: "projects"
+            widget: "list"
+            fields:
+              - { label: "اسم المشروع أو الكتاب", name: "title", widget: "string" }
+              - { label: "القسم والتصنيف", name: "category", widget: "select", options: ["كتب", "تطبيقات", "واجهات", "تصاميم أخرى"] }
+              - { label: "الصورة (رفع من الجهاز)", name: "image", widget: "image" }
+              - { label: "وصف العمل", name: "description", widget: "text" }
+              - { label: "رابط المعاينة / التحميل (اختياري)", name: "link", widget: "string", required: false }
