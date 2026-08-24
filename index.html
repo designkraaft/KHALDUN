@@ -4,11 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>معرض الأعمال | بورتفوليو</title>
-  <!-- خط تجوال والتنسيق السريع -->
+  <!-- خط تجوال وتنسيقات Tailwind CSS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap">
   <script src="https://cdn.tailwindcss.com"></script>
-  <style> body { font-family: 'Tajawal', sans-serif; } </style>
+  <style> 
+    body { font-family: 'Tajawal', sans-serif; } 
+  </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen">
 
@@ -21,8 +23,10 @@
     <p class="text-slate-600 max-w-xl mx-auto text-base md:text-lg leading-relaxed">
       أصمم واجهات التطبيقات، وأنسق وأخرج الكتب الرقمية والمطبوعة، وأطور حلولاً برمجية وتصاميم حديثة.
     </p>
+    
+    <!-- أزرار تواصل مخصصة للزوار والعملاء بدلاً من زر التحكم -->
     <div class="mt-6 flex justify-center gap-3">
-      <a href="admin/" target="_blank" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg text-sm font-bold transition">دخول لوحة التحكم</a>
+      <a href="mailto:example@gmail.com" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-sm transition">تواصل معي</a>
     </div>
   </header>
 
@@ -38,13 +42,13 @@
     </div>
   </main>
 
-  <!-- سكربت قراءة المشاريع تلقائياً -->
+  <!-- سكربت قراءة المشاريع تلقائياً من ملف projects.json -->
   <script>
     fetch('projects.json')
       .then(res => res.json())
       .then(data => {
         const grid = document.getElementById('projects-grid');
-        if (data.length === 0) {
+        if (!data || data.length === 0) {
           grid.innerHTML = '<p class="text-slate-500 text-sm">لا توجد مشاريع مضافة بعد.</p>';
           return;
         }
@@ -61,7 +65,7 @@
         `).join('');
       })
       .catch(() => {
-        document.getElementById('projects-grid').innerHTML = '<p class="text-slate-500 text-sm">أضف أول مشروع من لوحة التحكم ليظهر هنا.</p>';
+        document.getElementById('projects-grid').innerHTML = '<p class="text-slate-500 text-sm">لا توجد مشاريع حالياً.</p>';
       });
   </script>
 </body>
