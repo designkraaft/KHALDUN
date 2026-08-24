@@ -1,0 +1,16 @@
+[
+  {
+    "title": "تصميم وتنسيق كتاب تجريبي",
+    "category": "كتب",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600",
+    "description": "إخراج داخلي وتصميم غلاف احترافي جاهز للطباعة والنشر الإلكتروني.",
+    "link": "https://example.com"
+  },
+  {
+    "title": "تطبيق إدارة المهام الذكي",
+    "category": "تطبيقات",
+    "image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600",
+    "description": "واجهات مستخدم تفاعلية وتجربة استخدام حديثة للهواتف الذكية.",
+    "link": "https://example.com"
+  }
+]
