@@ -1,0 +1,35 @@
+media:
+  input: images
+  output: images
+
+content:
+  - name: projects
+    label: المشاريع والكتب
+    type: file
+    path: projects.json
+    fields:
+      - name: projects
+        label: قائمة الأعمال
+        type: list
+        fields:
+          - name: title
+            label: عنوان المشروع أو الكتاب
+            type: string
+            required: true
+          - name: category
+            label: القسم
+            type: select
+            options:
+              - كتب
+              - تطبيقات
+              - تصاميم واجهات
+              - أعمال أخرى
+          - name: image
+            label: صورة الغلاف / لقطة الشاشة
+            type: image
+          - name: description
+            label: وصف موجز
+            type: text
+          - name: link
+            label: رابط المعاينة (اختياري)
+            type: string
