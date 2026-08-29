@@ -1,0 +1,2220 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>منظومة التدريبات العقلية | نظام القياس والتحليل الشامل</title>
+  
+  <!-- FontAwesome for crisp UI icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  
+  <!-- مكتبة html2pdf لتصدير الجداول إلى PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  
+  <style>
+    :root {
+      --bg-main: #0c0f17;
+      --bg-card: #151924;
+      --bg-card-hover: #1c2230;
+      --bg-subtle: #1e2433;
+      --bg-input: #10141f;
+      --border-color: #273043;
+      --border-light: #35415c;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent-primary: #6366f1;
+      --accent-primary-hover: #4f46e5;
+      --accent-success: #10b981;
+      --accent-warning: #f59e0b;
+      --accent-danger: #ef4444;
+      --accent-info: #06b6d4;
+      
+      /* ألوان المساقات لتنظيم السجل */
+      --track-quran: #10b981;
+      --track-hadith: #3b82f6;
+      --track-lang: #f59e0b;
+      --track-study: #8b5cf6;
+      --track-mutoon: #f43f5e;
+      --track-poetry: #14b8a6;
+      --track-old: #64748b;
+
+      --sidebar-width: 280px;
+    }
+
+    [data-theme="light"] {
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f1f5f9;
+      --bg-subtle: #f1f5f9;
+      --bg-input: #ffffff;
+      --border-color: #e2e8f0;
+      --border-light: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #94a3b8;
+      --accent-primary: #4f46e5;
+      --accent-primary-hover: #4338ca;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      transition: background-color 0.2s, color 0.2s;
+      line-height: 1.8;
+    }
+
+    .app-container {
+      display: flex;
+      flex: 1;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .app-sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--bg-card);
+      border-left: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      z-index: 40;
+      transition: transform 0.25s ease;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    }
+
+    .sidebar-header {
+      padding: 20px 18px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 20px;
+      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.3;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .sidebar-nav {
+      padding: 16px 12px;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 16px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: right;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn i {
+      font-size: 16px;
+      width: 22px;
+      text-align: center;
+    }
+
+    .nav-btn:hover {
+      background-color: var(--bg-subtle);
+      color: var(--text-main);
+      transform: translateX(-4px);
+    }
+
+    .nav-btn.active {
+      background-color: var(--accent-primary);
+      color: #ffffff;
+      border-color: var(--accent-primary);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+    }
+
+    .nav-btn.active i {
+      color: #ffffff !important;
+    }
+
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .app-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background-color: var(--bg-main);
+    }
+
+    .top-header {
+      padding: 12px 20px;
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+
+    .view-title-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .header-tools {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tool-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-subtle);
+      color: var(--text-main);
+      transition: all 0.2s ease;
+      touch-action: manipulation;
+    }
+
+    .tool-btn:hover {
+      background-color: var(--bg-card-hover);
+      border-color: var(--border-light);
+    }
+
+    .tool-btn.primary {
+      background-color: var(--accent-primary);
+      color: #ffffff;
+      border-color: var(--accent-primary);
+    }
+
+    .tool-btn.danger {
+      background-color: var(--accent-danger);
+      color: #ffffff;
+      border-color: var(--accent-danger);
+    }
+
+    .timer-widget {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      font-family: monospace;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .timer-widget:hover {
+      transform: scale(1.05);
+      border-color: #38bdf8;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+    }
+
+    .timer-val {
+      color: #38bdf8;
+      letter-spacing: 2px;
+    }
+
+    .views-wrapper {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .view-panel {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .view-panel.active {
+      display: flex;
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .card-header h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-header p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text-muted);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      color: var(--text-main);
+      font-size: 14px;
+      font-weight: 700;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .stepper-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stepper-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-weight: 900;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .stepper-input {
+      flex: 1;
+      text-align: center;
+      font-family: monospace;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      background-color: var(--bg-card);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: right;
+      font-size: 14px;
+      min-width: 700px;
+    }
+
+    .data-table th {
+      background-color: var(--bg-subtle);
+      padding: 12px 16px;
+      font-weight: 800;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    .data-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
+      vertical-align: middle;
+    }
+
+    .data-table tr:hover td {
+      background-color: var(--bg-card-hover);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    /* Badges لتنظيم المساقات بالألوان */
+    .badge-track-quran { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-track-hadith { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .badge-track-lang { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-track-study { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border: 1px solid rgba(139, 92, 246, 0.3); }
+    .badge-track-mutoon { background: rgba(244, 63, 94, 0.15); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.3); }
+    .badge-track-poetry { background: rgba(20, 184, 166, 0.15); color: #14b8a6; border: 1px solid rgba(20, 184, 166, 0.3); }
+    .badge-track-old { background: rgba(100, 116, 139, 0.15); color: #94a3b8; border: 1px solid rgba(100, 116, 139, 0.3); }
+
+    .badge.success { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge.warning { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge.danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .badge.info { background: rgba(6, 182, 212, 0.15); color: #06b6d4; border: 1px solid rgba(6, 182, 212, 0.3); }
+    .badge.neutral { background: var(--bg-subtle); color: var(--text-muted); border: 1px solid var(--border-color); }
+
+    .delta-meter {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      font-family: monospace;
+    }
+    .delta-up { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .delta-down { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .delta-eq { background: var(--bg-subtle); color: var(--text-dim); }
+
+    .milestones-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .milestone-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .milestone-card:hover { border-color: var(--border-light); transform: translateY(-2px); }
+    .milestone-card.broken {
+      border-color: rgba(16, 185, 129, 0.6);
+      background: linear-gradient(180deg, var(--bg-card) 0%, rgba(16, 185, 129, 0.08) 100%);
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1);
+    }
+
+    .milestone-header { display: flex; align-items: center; justify-content: space-between; }
+    .milestone-icon {
+      width: 40px; height: 40px; border-radius: 10px; background-color: var(--bg-subtle);
+      display: flex; align-items: center; justify-content: center; color: var(--text-main); font-size: 16px;
+    }
+    .milestone-card.broken .milestone-icon { background-color: #10b981; color: #ffffff; box-shadow: 0 0 10px rgba(16,185,129,0.4); }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .kpi-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+    .kpi-label { font-size: 13px; color: var(--text-muted); font-weight: 800; }
+    .kpi-value { font-size: 22px; font-weight: 900; color: var(--text-main); font-family: monospace; }
+    .kpi-subtext { font-size: 12px; color: var(--text-dim); font-weight: 600; }
+
+    .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 35; }
+    .mobile-menu-btn { display: none; }
+
+    .outcome-summary-box {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(6, 182, 212, 0.08) 100%);
+      border: 1px solid var(--border-light); border-radius: 12px; padding: 20px; margin-top: 16px; display: flex; flex-direction: column; gap: 12px;
+    }
+    .outcome-item-badge {
+      display: flex; align-items: center; justify-content: space-between; background: var(--bg-subtle);
+      border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 14px; font-size: 14px; gap: 12px; flex-wrap: wrap;
+    }
+
+    .fullscreen-timer-hidden { display: none !important; }
+    #fullscreenTimerOverlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(12, 15, 23, 0.96); backdrop-filter: blur(15px);
+      z-index: 100000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .close-fullscreen-btn {
+      position: absolute; top: 40px; right: 40px; background: rgba(255,255,255,0.1); border: none; color: #fff;
+      font-size: 32px; width: 64px; height: 64px; border-radius: 50%; cursor: pointer;
+    }
+    .circular-timer-container { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .progress-ring { transform: rotate(-90deg); }
+    .progress-ring__circle { transition: stroke-dashoffset 1s linear, stroke 0.5s ease; stroke-dasharray: 1256; stroke-dashoffset: 0; stroke-linecap: round; }
+    .fullscreen-time-display { position: absolute; font-size: 6rem; font-weight: 900; font-family: monospace; color: #fff; }
+
+    #alarmBanner {
+      display: none; position: fixed; top: 15px; left: 50%; transform: translateX(-50%); z-index: 99999;
+      background: #ef4444; color: #fff; padding: 14px 28px; border-radius: 14px; font-weight: 900;
+      display: flex; align-items: center; gap: 16px; animation: pulse-danger 0.6s infinite alternate;
+    }
+
+    @media (max-width: 900px) {
+      .app-sidebar { position: fixed; top: 0; bottom: 0; right: 0; transform: translateX(100%); }
+      .app-sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.active { display: block; }
+      .mobile-menu-btn { display: inline-flex; }
+      .form-grid { grid-template-columns: 1fr; }
+      .fullscreen-time-display { font-size: 4rem; }
+      .progress-ring { width: 300px; height: 300px; }
+      .progress-ring__background, .progress-ring__circle { r: 130; cx: 150; cy: 150; }
+      .progress-ring__circle { stroke-dasharray: 816; }
+    }
+
+    @media print {
+      .app-sidebar, .top-header, .btn-action, .stepper-btn, .nav-btn, .sidebar-overlay, #alarmBanner, #fullscreenTimerOverlay, .export-btn, .header-tools { display: none !important; }
+      .app-container, .app-main, .views-wrapper { height: auto !important; overflow: visible !important; }
+      body { background: #fff !important; color: #000 !important; }
+      .card { border: 1px solid #ccc !important; box-shadow: none !important; margin-bottom: 20px;}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- شريط التنبيه العائم للمؤقت -->
+  <div id="alarmBanner">
+    <i class="fa-solid fa-bell fa-shake"></i>
+    <span>انتهى الوقت المحدد للمؤقت! ⏰</span>
+    <button onclick="stopAlarm()" class="tool-btn" style="background: #ffffff; color: #ef4444; font-weight: 900; border: none;">
+      إيقاف الصوت
+    </button>
+  </div>
+
+  <!-- مؤقت الشاشة الكاملة (التحديث السابق) -->
+  <div id="fullscreenTimerOverlay" class="fullscreen-timer-hidden">
+    <button class="close-fullscreen-btn" onclick="closeFullscreenTimer()"><i class="fa-solid fa-xmark"></i></button>
+    <div class="circular-timer-container">
+      <svg class="progress-ring" width="440" height="440">
+        <circle class="progress-ring__background" stroke="var(--bg-subtle)" stroke-width="16" fill="transparent" r="200" cx="220" cy="220"/>
+        <circle class="progress-ring__circle" id="fullscreenProgressCircle" stroke="var(--accent-info)" stroke-width="16" fill="transparent" r="200" cx="220" cy="220"/>
+      </svg>
+      <div class="fullscreen-time-display" id="fullscreenTimerText">10:00</div>
+    </div>
+  </div>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileSidebar()"></div>
+
+  <div class="app-container">
+    
+    <!-- القائمة الجانبية -->
+    <aside class="app-sidebar" id="appSidebar">
+      <div class="sidebar-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div class="brand-icon"><i class="fa-solid fa-brain"></i></div>
+          <div>
+            <div class="brand-title">التدريبات العقلية</div>
+            <div class="brand-subtitle">نظام القياس والتحليل</div>
+          </div>
+        </div>
+        <button onclick="toggleMobileSidebar()" class="tool-btn mobile-menu-btn" style="padding: 6px 10px;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button onclick="navigateTo('view-entry')" id="nav-view-entry" class="nav-btn active">
+          <i class="fa-solid fa-circle-plus"></i> <span>1. تسجيل نشاط وسجل اليوم</span>
+        </button>
+        <button onclick="navigateTo('view-barriers')" id="nav-view-barriers" class="nav-btn">
+          <i class="fa-solid fa-trophy" style="color: #f59e0b;"></i> <span>2. لوحة الحواجز والتقدم النهائي</span>
+        </button>
+        <button onclick="navigateTo('view-ledger')" id="nav-view-ledger" class="nav-btn">
+          <i class="fa-solid fa-table-list"></i> <span>3. السجل التاريخي (ملون ومنظم)</span>
+        </button>
+        <button onclick="navigateTo('view-compare')" id="nav-view-compare" class="nav-btn">
+          <i class="fa-solid fa-code-compare"></i> <span>4. مقارنة الأيام المخصصة</span>
+        </button>
+        <button onclick="navigateTo('view-diag')" id="nav-view-diag" class="nav-btn">
+          <i class="fa-solid fa-vial-circle-check"></i> <span>5. فحص الذاكرة التكميلي (8)</span>
+        </button>
+        <button onclick="navigateTo('view-reports')" id="nav-view-reports" class="nav-btn">
+          <i class="fa-solid fa-file-invoice"></i> <span>6. تقارير إثبات الحالة المعتمدة</span>
+        </button>
+        <!-- التبويب الجديد للأرقام القياسية -->
+        <button onclick="navigateTo('view-records')" id="nav-view-records" class="nav-btn" style="color: #10b981;">
+          <i class="fa-solid fa-crown" style="color: #10b981;"></i> <span>7. الأرقام القياسية (أعلى إنجاز)</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button onclick="toggleTheme()" class="tool-btn" style="width: 100%; justify-content: center;" id="themeToggleBtn">
+          <i class="fa-solid fa-sun"></i> <span>الوضع النهاري</span>
+        </button>
+        <div style="display: flex; gap: 8px;">
+          <button onclick="exportJSONBackup()" class="tool-btn" style="flex: 1; justify-content: center;">
+            <i class="fa-solid fa-download"></i> <span>نسخ احتياطي</span>
+          </button>
+          <label class="tool-btn" style="flex: 1; justify-content: center; margin: 0; cursor: pointer;">
+            <i class="fa-solid fa-upload"></i> <span>استرجاع</span>
+            <input type="file" id="importFile" onchange="importJSONBackup(event)" accept=".json" style="display: none;">
+          </label>
+        </div>
+      </div>
+    </aside>
+
+    <!-- منطقة العمل الرئيسية -->
+    <main class="app-main">
+      
+      <header class="top-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <button onclick="toggleMobileSidebar()" class="tool-btn mobile-menu-btn">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="view-title-badge" id="currentViewTitle">
+            <i class="fa-solid fa-circle-plus"></i> تسجيل نشاط وسجل اليوم
+          </div>
+        </div>
+
+        <div class="header-tools">
+          <div class="timer-widget" onclick="openFullscreenTimer()" title="تكبير المؤقت الشاشة كاملة">
+            <i class="fa-regular fa-clock" style="color: #38bdf8;"></i>
+            <span class="timer-val" id="globalTimerDisplay">10:00</span>
+          </div>
+
+          <select id="selTimerBarrierPreset" onchange="onTimerPresetChanged()" class="form-control" style="width: auto; padding: 6px 10px;">
+            <option value="7200">حاجز 1 (ساعتان - 120د)</option>
+            <option value="5400">حاجز 2 (ساعة ونصف - 90د)</option>
+            <option value="3600">حاجز 3 (ساعة واحدة - 60د)</option>
+            <option value="1800">حاجز 4 (30 دقيقة)</option>
+            <option value="1200">حاجز 5 (20 دقيقة)</option>
+            <option value="900">حاجز 6 (15 دقيقة)</option>
+            <option value="600" selected>حاجز 7 / قراءة (10 دقائق)</option>
+            <option value="300">حاجز 8 الرسمي (5 دقائق)</option>
+            <option value="180">حاجز 9 (3 دقائق)</option>
+            <option value="120">حاجز 10 (دقيقتان)</option>
+            <option value="60">حاجز 11 (دقيقة واحدة)</option>
+            <option value="50">حاجز 12 (50 ثانية)</option>
+          </select>
+
+          <button onclick="toggleTimer()" id="btnTimerControl" class="tool-btn primary">
+            <i class="fa-solid fa-play"></i> <span>بدء</span>
+          </button>
+          <button onclick="resetTimer()" class="tool-btn" title="إعادة ضبط"><i class="fa-solid fa-rotate-left"></i></button>
+          
+          <button id="btnHeaderStopAlarm" onclick="stopAlarm()" class="tool-btn danger" style="display: none;">
+            <i class="fa-solid fa-volume-xmark"></i> <span>إيقاف الرنين</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="views-wrapper">
+        
+        <!-- التبويب الأول: التسجيل وسجل اليوم -->
+        <div id="view-entry" class="view-panel active">
+          
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3><i class="fa-solid fa-pen-to-square"></i> تسجيل جلسة أو محاولة جديدة (أرقام صحيحة دقيقة بالواحد)</h3>
+                <p>اختر نوع النشاط والمساق وسجل النتيجة بالأرقام الصحيحة لتنزل فوراً في سجل اليوم ولوحة الحواجز.</p>
+              </div>
+              <span class="badge neutral font-mono" id="todayRoundsBadge">0 جولات اليوم</span>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label>نوع النشاط:</label>
+                <select id="selCategory" onchange="onCategoryChanged()" class="form-control">
+                  <option value="reading" selected>📖 جولة قراءة 10 دقائق (صفحات)</option>
+                  <option value="barrier">🎯 محاولة كسر حاجز</option>
+                  <option value="words_study">📝 حفظ كلمات لغة / مقررات دراسية</option>
+                  <option value="diag">🧪 فحص الذاكرة التكميلي (10د)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>المساق التدريبي:</label>
+                <select id="selTrack" onchange="updateEntryPreview()" class="form-control">
+                  <option value="مساق حفظ القرآن الكريم">مساق حفظ القرآن الكريم</option>
+                  <option value="مساق حفظ الحديث الشريف">مساق حفظ الحديث الشريف (رياض الصالحين)</option>
+                  <option value="مساق حفظ موسوعة اللغات">مساق حفظ موسوعة اللغات (50 كلمة/ص)</option>
+                  <option value="مساق حفظ المواد الدراسية">مساق حفظ المواد الدراسية والجامعية</option>
+                  <option value="مساق حفظ المتون الشرعية">مساق حفظ المتون الشرعية الفقهية</option>
+                  <option value="مساق حفظ الشعر والمنظومات">مساق حفظ الشعر والمنظومات</option>
+                  <option value="مساق الحفظ القديم (المتفلت)">مساق الحفظ القديم المتفلت</option>
+                </select>
+              </div>
+
+              <div id="dynamicInputsArea" style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+                <!-- تُحقن هنا الحقول ديناميكياً -->
+              </div>
+            </div>
+
+            <div style="background-color: var(--bg-subtle); padding: 14px 18px; border-radius: 10px; border: 1px solid var(--border-color); margin-top: 16px; display: flex; align-items: center; justify-content: space-between; font-size: 14px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="color: var(--text-muted); font-weight: 800;">⚡ المؤشر التقديري (WPM):</span>
+                <span id="previewMetric1" style="font-weight: 900; font-family: monospace; color: var(--accent-info);"></span>
+              </div>
+              <span id="previewMetric2" class="badge neutral font-mono"></span>
+            </div>
+
+            <button onclick="commitEntry()" class="tool-btn primary" style="width: 100%; justify-content: center; padding: 14px; margin-top: 16px; font-size: 15px;">
+              <i class="fa-solid fa-plus"></i> <span>تثبيت الجلسة في سجل اليوم وتحديث الإنجاز</span>
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3><i class="fa-solid fa-list-check"></i> سجل جولات وأنشطة اليوم الحالي (<span id="todayDateLabel"></span>)</h3>
+                <p>متابعة التطور ومقارنته <strong>بأعلى جولة سابقة (الرقم القياسي)</strong> لنفس المساق.</p>
+              </div>
+              <button onclick="exportTableToCSV('tableToday', 'سجل_اليوم')" class="tool-btn export-btn">
+                <i class="fa-solid fa-download"></i> تصدير الجدول
+              </button>
+            </div>
+
+            <div class="table-container">
+              <table class="data-table" id="tableToday">
+                <thead>
+                  <tr>
+                    <th style="width: 40px; text-align: center;">#</th>
+                    <th>نوع النشاط</th>
+                    <th>المساق</th>
+                    <th>التفاصيل والمحصول</th>
+                    <th>الكمية بالواحد</th>
+                    <th>التقدم عن أعلى إنجاز (Delta)</th>
+                    <th style="width: 50px; text-align: center;">حذف</th>
+                  </tr>
+                </thead>
+                <tbody id="todayTableBody"></tbody>
+                <tfoot id="todayTableFoot"></tfoot>
+              </table>
+            </div>
+
+            <div id="todayOutcomeSection" class="outcome-summary-box"></div>
+          </div>
+
+        </div>
+
+        <!-- التبويب الثاني: لوحة الحواجز -->
+        <div id="view-barriers" class="view-panel">
+          
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3><i class="fa-solid fa-trophy" style="color: #f59e0b;"></i> لوحة متابعة كسر الحواجز الـ 12 والإنجاز النهائي</h3>
+                <p>متابعة الكسر بنجاح، رصد المحاولات الفاشلة، وإبراز التفوق في تجاوز الوقت المستهدف للحاجز.</p>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <label style="font-size: 13px; font-weight: 800; color: var(--text-muted);">تصفية المساق:</label>
+                <select id="selBarrierFilter" onchange="renderBarriersBoard()" class="form-control" style="width: 200px;">
+                  <option value="all">جميع المساقات</option>
+                  <option value="مساق حفظ القرآن الكريم">القرآن الكريم</option>
+                  <option value="مساق حفظ الحديث الشريف">الحديث الشريف</option>
+                  <option value="مساق حفظ موسوعة اللغات">اللغات الأجنبية</option>
+                  <option value="مساق حفظ المواد الدراسية">المواد الدراسية</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="trackKpiGrid" class="kpi-grid"></div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <h4 style="font-size: 16px; font-weight: 900; color: var(--text-main);">
+                <i class="fa-solid fa-layer-group"></i> بطاقات مستويات الحواجز الـ 12:
+              </h4>
+              <span id="barriersCountBadge" class="badge info font-mono" style="font-size: 14px;">0 / 12 مكسور</span>
+            </div>
+
+            <div id="milestonesCardsContainer" class="milestones-grid"></div>
+          </div>
+
+        </div>
+
+        <!-- التبويب الثالث: السجل التاريخي المنظم -->
+        <div id="view-ledger" class="view-panel">
+          
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3><i class="fa-solid fa-table-list"></i> السجل التاريخي الشامل (ملون ومنظم)</h3>
+                <p>يتم تمييز كل مساق بلون خاص لتسهيل الجرد البصري، مع إمكانية الفرز والطباعة.</p>
+              </div>
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                
+                <!-- خيارات الفرز والتصفية -->
+                <select id="selLedgerSort" onchange="renderAllLedger()" class="form-control" style="width: 170px; padding: 6px;">
+                  <option value="date">ترتيب حسب التاريخ</option>
+                  <option value="track">ترتيب حسب المساق (للتجميع)</option>
+                </select>
+
+                <select id="selLedgerFilter" onchange="renderAllLedger()" class="form-control" style="width: 140px; padding: 6px;">
+                  <option value="all">كل الأنشطة</option>
+                  <option value="reading">قراءة 10د فقط</option>
+                  <option value="barrier">محاولات حواجز</option>
+                </select>
+                
+                <div style="width: 1px; height: 24px; background: var(--border-color); margin: 0 4px;"></div>
+
+                <!-- أزرار التصدير (PDF + Excel) -->
+                <button onclick="exportTableToCSV('tableLedgerFull', 'السجل_الكامل')" class="tool-btn export-btn">
+                  <i class="fa-solid fa-file-excel"></i> CSV
+                </button>
+                <button onclick="exportTableToPDF('tableLedgerFull', 'السجل_التاريخي_لمنظومة_التدريبات')" class="tool-btn danger export-btn">
+                  <i class="fa-solid fa-file-pdf"></i> PDF
+                </button>
+              </div>
+            </div>
+
+            <div class="table-container">
+              <table class="data-table" id="tableLedgerFull">
+                <thead>
+                  <tr>
+                    <th style="width: 40px; text-align: center;">#</th>
+                    <th>التاريخ والوقت</th>
+                    <th>نوع النشاط</th>
+                    <th>المساق (ملون)</th>
+                    <th>التفاصيل</th>
+                    <th>الكمية</th>
+                    <th>الحالة / التقييم</th>
+                    <th style="width: 50px; text-align: center;" class="hide-in-pdf">إجراء</th>
+                  </tr>
+                </thead>
+                <tbody id="ledgerTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- التبويب الرابع: المقارنة -->
+        <div id="view-compare" class="view-panel">
+          
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3><i class="fa-solid fa-code-compare"></i> أداة مقارنة الأيام المخصصة وجهاً لوجه</h3>
+                <p>اختر أي تاريخين لمقارنة أداء كافة المساقات وحساب متوسط التقدم الفعلي.</p>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 13px; font-weight: 800;">اليوم الأول:</span>
+                  <select id="selDate1" onchange="runDayComparison()" class="form-control" style="width: 150px;"></select>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 13px; font-weight: 800;">اليوم الثاني:</span>
+                  <select id="selDate2" onchange="runDayComparison()" class="form-control" style="width: 150px;"></select>
+                </div>
+              </div>
+            </div>
+
+            <div id="compareResultsArea"></div>
+          </div>
+
+        </div>
+
+        <!-- التبويب الخامس: الفحص التكميلي 8 مقاييس (الأصلية الكاملة) -->
+        <div id="view-diag" class="view-panel">
+          
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3><i class="fa-solid fa-vial-circle-check"></i> مقاييس فحص الذاكرة التكميلي الثمانية</h3>
+                <p>مقررات الفحص من الكتيب الرسمي لقياس سعة المعالج البصري والسمعي والرقمي (معيار 10 دقائق).</p>
+              </div>
+              <select id="selDiagTest" onchange="loadDiagTestContent()" class="form-control" style="width: 300px;">
+                <option value="1">المقياس 1: القراءة البصرية المتدفقة</option>
+                <option value="2">المقياس 2: القراءة البحثية الفاحصة</option>
+                <option value="3">المقياس 3: مقياس الحضور الذهني والخواطر</option>
+                <option value="4">المقياس 4: حفظ الحديث النبوي الشريف</option>
+                <option value="5">المقياس 5: حفظ الشعر والقصيد</option>
+                <option value="6">المقياس 6: حفظ المتون الشرعية الفقهية</option>
+                <option value="7">المقياس 7: الذاكرة الرقمية للدول</option>
+                <option value="8">المقياس 8: مهارة الذاكرة السمعية</option>
+              </select>
+            </div>
+
+            <div id="diagTextContainer" style="background-color: var(--bg-input); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; font-size: 15px; max-height: 400px; overflow-y: auto; white-space: pre-wrap; margin-bottom: 20px; font-weight: 600;">
+            </div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <label style="font-size: 13px; font-weight: 800;">النتيجة المحققة:</label>
+                <input type="number" id="diagResultInput" value="1" min="0" step="1" class="form-control" style="width: 120px;">
+                
+                <label style="font-size: 13px; font-weight: 800; margin-right: 12px;">نسبة الإتقان %:</label>
+                <input type="number" id="diagAccuracyInput" value="100" min="0" max="100" step="5" class="form-control" style="width: 120px;">
+              </div>
+
+              <button onclick="saveDiagTestEntry()" class="tool-btn primary" style="padding: 10px 16px; font-size: 14px;">
+                <i class="fa-solid fa-save"></i> <span>تثبيت النتيجة بالسجل</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- التبويب السادس: التقارير -->
+        <div id="view-reports" class="view-panel">
+          
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3><i class="fa-solid fa-file-invoice"></i> توليد تقارير إثبات الحالة المعتمدة</h3>
+                <p>اختر أي محاولة كسر حاجز لتوليد صيغة التقرير المعتمدة لنسخها.</p>
+              </div>
+              <select id="selReportAttempt" onchange="generateSelectedReport()" class="form-control" style="width: 360px;">
+              </select>
+            </div>
+
+            <div style="position: relative;">
+              <textarea id="txtReportBox" readonly style="width: 100%; height: 360px; background-color: var(--bg-input); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; color: var(--text-main); font-size: 14px; font-weight: 600; resize: none; outline: none;"></textarea>
+            </div>
+
+            <button onclick="copyOfficialReport()" class="tool-btn primary" style="width: 100%; justify-content: center; padding: 14px; margin-top: 16px; font-size: 15px;">
+              <i class="fa-solid fa-copy"></i> <span>نسخ نص التقرير بالكامل للحافظة</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- التبويب السابع الجديد: الأرقام القياسية -->
+        <div id="view-records" class="view-panel">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 style="color: #10b981;"><i class="fa-solid fa-crown"></i> الأرقام القياسية وأعلى إنجاز (لكل مساق)</h3>
+                <p>يستعرض هذا القسم أقصى رقم قياسي وصلت إليه (أعلى صفحات مقروءة وأعلى سرعة WPM) لكل مساق تدريبي في جولة الـ 10 دقائق.</p>
+              </div>
+            </div>
+            <div id="recordsCardsContainer" class="milestones-grid">
+              <!-- تُحقن هنا بطاقات الأرقام القياسية ديناميكياً -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <script>
+    const DB_KEY = 'MENTAL_TRAINING_DB_V2026';
+    const THEME_KEY = 'MENTAL_TRAINING_THEME';
+
+    const ALL_12_BARRIERS = [
+      { id: 1, name: "حاجز 1 (ساعتان - 120د)", shortName: "حاجز 1 (120د)", targetMins: 120, icon: "fa-hourglass-start", desc: "أول خطوة لكسر روتين الحفظ القديم" },
+      { id: 2, name: "حاجز 2 (ساعة ونصف - 90د)", shortName: "حاجز 2 (90د)", targetMins: 90, icon: "fa-hourglass-half", desc: "بداية تسريع المعالج البصري" },
+      { id: 3, name: "حاجز 3 (ساعة واحدة - 60د)", shortName: "حاجز 3 (60د)", targetMins: 60, icon: "fa-clock", desc: "نقطة التحول من الساعات للدقائق" },
+      { id: 4, name: "حاجز 4 (30 دقيقة)", shortName: "حاجز 4 (30د)", targetMins: 30, icon: "fa-stopwatch", desc: "نصف ساعة للصفحة المتقنة" },
+      { id: 5, name: "حاجز 5 (20 دقيقة)", shortName: "حاجز 5 (20د)", targetMins: 20, icon: "fa-gauge", desc: "تسريع التقاط القوالب البصرية" },
+      { id: 6, name: "حاجز 6 (15 دقيقة)", shortName: "حاجز 6 (15د)", targetMins: 15, icon: "fa-gauge-high", desc: "ربع ساعة للصفحة الكاملة" },
+      { id: 7, name: "حاجز 7 (10 دقائق)", shortName: "حاجز 7 (10د)", targetMins: 10, icon: "fa-bolt", desc: "معيار الـ 10 دقائق المكثفة" },
+      { id: 8, name: "حاجز 8 الرسمي (5 دقائق)", shortName: "حاجز 8 الرسمي (5د)", targetMins: 5, icon: "fa-medal", desc: "الحد الأدنى الرسمي المعتمد للتخرج" },
+      { id: 9, name: "حاجز 9 (3 دقائق)", shortName: "حاجز 9 (3د)", targetMins: 3, icon: "fa-bolt-lightning", desc: "مرحلة الانطلاق العالي والمضاعفة" },
+      { id: 10, name: "حاجز 10 (دقيقتان)", shortName: "حاجز 10 (2د)", targetMins: 2, icon: "fa-fire", desc: "مستوى طلاب العلم والعلماء" },
+      { id: 11, name: "حاجز 11 (دقيقة واحدة)", shortName: "حاجز 11 (1د)", targetMins: 1, icon: "fa-wand-magic-sparkles", desc: "طفرة الحفظ الفوري المتقن" },
+      { id: 12, name: "حاجز 12 (50 ثانية)", shortName: "حاجز 12 (50ث)", targetMins: 1, icon: "fa-crown", desc: "مستوى كبار الحفاظ والعباقرة" }
+    ];
+
+    const DIAG_DATA = {
+      1: { title: "المقياس 1: القراءة البصرية المتدفقة (10د)", desc: "قراءة بصرية صامتة من أول سورة البقرة لمعرفة عدد الصفحات الممسوحة بصرياً.", text: "اقرأ بصرياً من مصحفك أو النص بأقصى سرعة مسح ذهني دون تحريك الشفاه أو النطق.\nالهدف: قياس سعة المعالج البصري وسرعة تدفق الصفحات خلال 10 دقائق." },
+      2: { title: "المقياس 2: القراءة البحثية الفاحصة (10د)", desc: "البحث عن لفظ الجلالة (الله) واسم (رب) ومشتقاتهما في سورة البقرة.", text: "المطلوب إحصاء عدد الكلمات المستهدفة وعدد الصفحات التي تم مسحها فاحصاً خلال 10 دقائق دون قراءة النص كاملاً." },
+      3: { title: "المقياس 3: مقياس الحضور الذهني والخواطر (10د)", desc: "قراءة تدبرية هادئة لصفحة واحدة مع إحصاء عدد الخواطر المرافقة.", text: "الهدف: قياس صفاء الذهن وعدد الهواجس والخواطر المصاحبة خلال 10 دقائق وتدريب النفس على قمع الشتات." },
+      4: { title: "المقياس 4: حفظ الحديث النبوي الشريف (10د)", desc: "حفظ ما تستطيعه من أحاديث سنن أبي داود بإتقان 100% (كل خطأ ينقص 5%).", text: "1- عَنْ مِحْجَنِ بْنِ الأَدْرَعِ: دَخَلَ رَسُولُ اللَّهِ ﷺ الْمَسْجِدَ، فَإِذَا رَجُلٌ قَدْ قَضَى صَلاَتَهُ وَهُوَ يَتَشَهَّدُ وَهُوَ يَقُولُ: اللَّهُمَّ إِنِّي أَسْأَلُكَ يَا أَللَّهُ الأَحَدُ الصَّمَدُ الَّذِي لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ، أَنْ تَغْفِرَ لِي ذُنُوبِي، إِنَّكَ أَنْتَ الْغَفُورُ الرَّحِيمُ. فَقَالَ: «قَدْ غُفِرَ لَهُ، قَدْ غُفِرَ لَهُ، قَدْ غُفِرَ لَهُ».\n\n2- عَنْ أَنَسٍ: قَالَ النَّاسُ: يَا رَسُولَ اللَّهِ، غَلاَ السِّعْرُ فَسَعِّرْ لَنَا، فَقَالَ: «إِنَّ اللَّهَ هُوَ الْمُسَعِّرُ الْقَابِضُ الْبَاسِطُ الرَّازِقُ، وَإِنِّي لأَرْجُو أَنْ أَلْقَى اللَّهَ وَلَيْسَ أَحَدٌ مِنْكُمْ يُطَالِبُنِي بِمَظْلَمَةٍ فِي دَمٍ وَلاَ مَالٍ»." },
+      5: { title: "المقياس 5: حفظ الشعر والقصيد (10د)", desc: "حفظ أبيات من قصيدة حسان بن ثابت في مدح النبي ﷺ.", text: "1- مُحَمَّدٌ المَبْعُوثُ لِلنَّاسِ رَحْمَةً ** يُشَيِّدُ مَا أَوْهَى الضَّلالُ وَيُصْلِحُ\n2- لَئِنْ سَبَّحَتْ صُمُّ الجِبَالِ مُجِيبَةً ** لِدَاوُدَ أَوْ أَلانَ الحَدِيدَ المُصَفَّحُ\n3- فَإِنَّ الصُّخُورَ الصُّمَّ أَلانَتْ بِكَفِّهِ ** وَإِنَّ الحَصَى فِي كَفِّهِ لَيُسَبِّحُ" },
+      6: { title: "المقياس 6: حفظ المتون الشرعية الفقهية (10د)", desc: "حفظ أسطر من متن أبي شجاع في الفقه الشافعي.", text: "الصَّلاةُ الْمَفْرُوضَةُ خَمْسٌ: الظُّهْرُ: وَأَوَّلُ وَقْتِهَا زَوَالُ الشَّمْسِ، وَآخِرُهُ إِذَا صَارَ ظِلُّ كُلِّ شَيْءٍ مِثْلَهُ بَعْدَ ظِلِّ الزَّوَالِ. وَالْعَصْرُ: وَأَوَّلُ وَقْتِهَا الزِّيَادَةُ عَلَى ظِلِّ الْمِثْلِ، وَآخِرُهُ فِي الاخْتِيَارِ إِلَى ظِلِّ الْمِثْلَيْنِ، وَفِي الْجَوَازِ إِلَى غُرُوبِ الشَّمْسِ." },
+      7: { title: "المقياس 7: الذاكرة الرقمية للدول (10د)", desc: "حفظ ترتيب الدول وأعداد المسلمين فيها بدقة رقمية تامة.", text: "1 - الهند: 217,286,000\n2 - إندونيسيا: 204,847,000\n3 - باكستان: 178,097,000\n4 - بنغلاديش: 148,607,000\n5 - مصر: 80,024,000\n6 - تركيا: 74,660,000\n7 - نيجيريا: 75,728,000" },
+      8: { title: "المقياس 8: مهارة الذاكرة السمعية (10د)", desc: "حفظ مقطع سمعي دون النظر للنص بتاتاً خلال 10 دقائق.", text: "استمع للملف الصوتي المخصص لمساقك واحفظ أقصى ما تستطيع سماعياً فقط دون النظر للكتاب نهائياً بإتقان وسرد تام." }
+    };
+
+    function getDB() {
+      try {
+        const raw = localStorage.getItem(DB_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveDB(data) {
+      localStorage.setItem(DB_KEY, JSON.stringify(data));
+      refreshAllViews();
+    }
+
+    function getTodayDateStr() {
+      const d = new Date();
+      return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+    }
+
+    function getArabicDayName() {
+      const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+      return days[new Date().getDay()];
+    }
+
+    function toggleMobileSidebar() {
+      const sb = document.getElementById('appSidebar');
+      const ov = document.getElementById('sidebarOverlay');
+      if (sb && ov) {
+        sb.classList.toggle('open');
+        ov.classList.toggle('active');
+      }
+    }
+
+    function navigateTo(viewId) {
+      document.querySelectorAll('.view-panel').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+
+      const target = document.getElementById(viewId);
+      const navBtn = document.getElementById(`nav-${viewId}`);
+      if (target) target.classList.add('active');
+      if (navBtn) navBtn.classList.add('active');
+
+      const titles = {
+        'view-entry': '<i class="fa-solid fa-circle-plus"></i> تسجيل نشاط وسجل اليوم',
+        'view-barriers': '<i class="fa-solid fa-trophy" style="color:#f59e0b;"></i> لوحة الحواجز والتقدم النهائي',
+        'view-ledger': '<i class="fa-solid fa-table-list"></i> السجل التاريخي الشامل',
+        'view-compare': '<i class="fa-solid fa-code-compare"></i> مقارنة الأيام المخصصة',
+        'view-diag': '<i class="fa-solid fa-vial-circle-check"></i> فحص الذاكرة التكميلي (8)',
+        'view-reports': '<i class="fa-solid fa-file-invoice"></i> تقارير إثبات الحالة المعتمدة',
+        'view-records': '<i class="fa-solid fa-crown" style="color:#10b981;"></i> الأرقام القياسية (أعلى إنجاز)'
+      };
+      document.getElementById('currentViewTitle').innerHTML = titles[viewId] || '';
+      
+      const sb = document.getElementById('appSidebar');
+      const ov = document.getElementById('sidebarOverlay');
+      if (sb && sb.classList.contains('open')) {
+        sb.classList.remove('open');
+        ov.classList.remove('active');
+      }
+
+      refreshAllViews();
+    }
+
+    function onCategoryChanged() {
+      const cat = document.getElementById('selCategory').value;
+      const area = document.getElementById('dynamicInputsArea');
+      
+      if (cat === 'reading') {
+        area.innerHTML = `
+          <div class="form-group">
+            <label>الصفحات المنجزة (10 دقائق):</label>
+            <div class="stepper-container">
+              <button class="stepper-btn" onclick="stepVal('inPages', -1)">-1</button>
+              <input type="number" id="inPages" value="20" min="1" step="1" oninput="updateEntryPreview()" class="form-control stepper-input">
+              <button class="stepper-btn" onclick="stepVal('inPages', 1)">+1</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>عدد الخواطر / الشتات:</label>
+            <div class="stepper-container">
+              <button class="stepper-btn" onclick="stepVal('inThoughts', -1)">-1</button>
+              <input type="number" id="inThoughts" value="0" min="0" step="1" oninput="updateEntryPreview()" class="form-control stepper-input">
+              <button class="stepper-btn" onclick="stepVal('inThoughts', 1)">+1</button>
+            </div>
+          </div>
+        `;
+      } else if (cat === 'barrier') {
+        const barrierOptions = ALL_12_BARRIERS.map(b => `<option value="${b.name}">${b.name}</option>`).join('');
+        area.innerHTML = `
+          <div class="form-group">
+            <label>الحاجز المستهدف:</label>
+            <select id="inBarrierName" onchange="updateEntryPreview()" class="form-control">
+              ${barrierOptions}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>الوقت الفعلي المستغرق (دقائق):</label>
+            <div class="stepper-container">
+              <button class="stepper-btn" onclick="stepVal('inActTime', -1)">-1</button>
+              <input type="number" id="inActTime" value="5" min="1" step="1" oninput="updateEntryPreview()" class="form-control stepper-input">
+              <button class="stepper-btn" onclick="stepVal('inActTime', 1)">+1</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>عدد الأخطاء (كل خطأ ينقص 5%):</label>
+            <div class="stepper-container">
+              <button class="stepper-btn" onclick="stepVal('inErrors', -1)">-1</button>
+              <input type="number" id="inErrors" value="0" min="0" step="1" oninput="updateEntryPreview()" class="form-control stepper-input">
+              <button class="stepper-btn" onclick="stepVal('inErrors', 1)">+1</button>
+            </div>
+          </div>
+        `;
+      } else if (cat === 'words_study') {
+        area.innerHTML = `
+          <div class="form-group">
+            <label>الكمية المنجزة (كلمات / صفحات دراسية):</label>
+            <div class="stepper-container">
+              <button class="stepper-btn" onclick="stepVal('inWords', -5)">-5</button>
+              <input type="number" id="inWords" value="50" min="1" step="1" oninput="updateEntryPreview()" class="form-control stepper-input">
+              <button class="stepper-btn" onclick="stepVal('inWords', 5)">+5</button>
+            </div>
+          </div>
+        `;
+      } else if (cat === 'diag') {
+        area.innerHTML = `
+          <div class="form-group">
+            <label>مقياس الفحص التكميلي:</label>
+            <select id="inDiagNum" class="form-control">
+              <option value="1">المقياس 1: القراءة البصرية المتدفقة</option>
+              <option value="2">المقياس 2: القراءة البحثية الفاحصة</option>
+              <option value="3">المقياس 3: مقياس الحضور الذهني والخواطر</option>
+              <option value="4">المقياس 4: حفظ الحديث النبوي الشريف</option>
+              <option value="5">المقياس 5: حفظ الشعر والقصيد</option>
+              <option value="6">المقياس 6: حفظ المتون الشرعية الفقهية</option>
+              <option value="7">المقياس 7: الذاكرة الرقمية للدول</option>
+              <option value="8">المقياس 8: مهارة الذاكرة السمعية</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>النتيجة المحققة:</label>
+            <input type="number" id="inDiagVal" value="1" min="0" step="1" class="form-control">
+          </div>
+        `;
+      }
+      updateEntryPreview();
+    }
+
+    function stepVal(elemId, delta) {
+      const el = document.getElementById(elemId);
+      if (el) {
+        let v = parseInt(el.value) || 0;
+        v = Math.max(0, v + delta);
+        el.value = v;
+        updateEntryPreview();
+      }
+    }
+
+    // دالة مساعدة لتحديد متوسط الكلمات (WPM) حسب نوع المساق
+    function getTrackWPMMultiplier(trackName) {
+        if (!trackName) return 128;
+        if (trackName.includes('المواد الدراسية')) return 235; // معدل المادة العلمية (بين 220-250)
+        if (trackName.includes('القرآن')) return 128; // القرآن الكريم
+        return 128;
+    }
+
+    // دالة مساعدة لتحديد Badge اللون المخصص لكل مساق
+    function getTrackBadgeClass(trackName) {
+        if (!trackName) return 'badge-track-old';
+        if (trackName.includes('القرآن')) return 'badge-track-quran';
+        if (trackName.includes('الحديث')) return 'badge-track-hadith';
+        if (trackName.includes('اللغات')) return 'badge-track-lang';
+        if (trackName.includes('المواد الدراسية')) return 'badge-track-study';
+        if (trackName.includes('المتون')) return 'badge-track-mutoon';
+        if (trackName.includes('الشعر')) return 'badge-track-poetry';
+        return 'badge-track-old';
+    }
+
+    function updateEntryPreview() {
+      const cat = document.getElementById('selCategory').value;
+      const track = document.getElementById('selTrack').value;
+      const m1 = document.getElementById('previewMetric1');
+      const m2 = document.getElementById('previewMetric2');
+
+      if (cat === 'reading') {
+        const pages = parseInt(document.getElementById('inPages')?.value) || 0;
+        
+        const avgWords = getTrackWPMMultiplier(track);
+        const wpm = Math.round((pages * avgWords) / 10);
+        
+        m1.innerText = `السرعة: ~${wpm} كلمة/دقيقة | قراءة ${pages} صفحة بـ 10د`;
+        m2.innerText = pages >= 50 ? 'مستوى متقدم 🔥' : 'مستوى تمهيدي';
+        m2.className = 'badge info';
+      } else if (cat === 'barrier') {
+        const errors = parseInt(document.getElementById('inErrors')?.value) || 0;
+        const actTime = parseInt(document.getElementById('inActTime')?.value) || 5;
+        const bName = document.getElementById('inBarrierName')?.value || '';
+        
+        const barrierObj = ALL_12_BARRIERS.find(b => bName.includes(b.shortName) || bName === b.name);
+        const targetMins = barrierObj ? barrierObj.targetMins : 999;
+        
+        const acc = Math.max(0, 100 - (errors * 5));
+        const passedAcc = acc >= 90;
+        const passedTime = actTime <= targetMins;
+        
+        const passed = passedAcc && passedTime;
+        const mult = actTime > 0 ? Math.round(360 / actTime) : 0;
+        
+        if (!passedTime) {
+            m1.innerText = `فشل بسبب الوقت: ${actTime}د > ${targetMins}د المستهدفة`;
+            m2.innerText = 'تجاوز للوقت (فاشلة) ⚠️';
+            m2.className = 'badge danger';
+        } else if (!passedAcc) {
+            m1.innerText = `فشل بسبب الإتقان: ${acc}% (المطلوب 90%+)`;
+            m2.innerText = 'يحتاج إعادة ⚠️';
+            m2.className = 'badge warning';
+        } else {
+            m1.innerText = `إتقان: ${acc}% | وقت ممتاز | مضاعفة: ${mult} ضعف`;
+            m2.innerText = 'مقبول وناجح ✅';
+            m2.className = 'badge success';
+        }
+      } else {
+        m1.innerText = 'جاهز للتثبيت في السجل';
+        m2.innerText = 'نشاط تدريبي';
+        m2.className = 'badge neutral';
+      }
+    }
+
+    function commitEntry() {
+      const cat = document.getElementById('selCategory').value;
+      const track = document.getElementById('selTrack').value;
+      const today = getTodayDateStr();
+      const timeStr = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+
+      let record = {
+        id: Date.now(),
+        date: today,
+        time: timeStr,
+        category: cat,
+        track: track
+      };
+
+      if (cat === 'reading') {
+        const pages = parseInt(document.getElementById('inPages')?.value) || 0;
+        const thoughts = parseInt(document.getElementById('inThoughts')?.value) || 0;
+        record.pages = pages;
+        record.thoughts = thoughts;
+        
+        const avgWords = getTrackWPMMultiplier(track);
+        const wpm = Math.round((pages * avgWords) / 10);
+        
+        record.details = `جولة 10د (${pages} ص) - ~${wpm} ك/د`;
+        record.qty = pages;
+      } else if (cat === 'barrier') {
+        const bName = document.getElementById('inBarrierName')?.value || 'حاجز';
+        const actTime = parseInt(document.getElementById('inActTime')?.value) || 5;
+        const errors = parseInt(document.getElementById('inErrors')?.value) || 0;
+        
+        const barrierObj = ALL_12_BARRIERS.find(b => bName.includes(b.shortName) || bName === b.name);
+        const targetMins = barrierObj ? barrierObj.targetMins : 999;
+        
+        const acc = Math.max(0, 100 - (errors * 5));
+        const passedAcc = acc >= 90;
+        const passedTime = actTime <= targetMins;
+        const passed = passedAcc && passedTime;
+        
+        const mult = actTime > 0 ? Math.round(360 / actTime) : 0;
+
+        record.barrierName = bName;
+        record.actTime = actTime;
+        record.errors = errors;
+        record.accuracy = acc;
+        record.status = passed ? 'مقبول' : 'يحتاج إعادة'; // يحتاج إعادة للاثنين (إما وقت أو إتقان)
+        record.multiplier = mult;
+        record.details = `${bName} (نفذ بـ ${actTime}د)`;
+        record.qty = 1;
+      } else if (cat === 'words_study') {
+        const words = parseInt(document.getElementById('inWords')?.value) || 0;
+        record.words = words;
+        record.details = `حفظ كلمات/مقررات (${words})`;
+        record.qty = words;
+      } else if (cat === 'diag') {
+        const dNum = document.getElementById('inDiagNum')?.value || '1';
+        const dVal = parseInt(document.getElementById('inDiagVal')?.value) || 0;
+        record.diagNum = dNum;
+        record.diagVal = dVal;
+        record.details = `فحص تكميلي المقياس ${dNum} (${dVal})`;
+        record.qty = dVal;
+      }
+
+      const db = getDB();
+      db.unshift(record); // newest at start
+      saveDB(db);
+      showToast('تم تثبيت الجلسة بنجاح!');
+    }
+
+    function renderTodayTable() {
+      const tbody = document.getElementById('todayTableBody');
+      const tfoot = document.getElementById('todayTableFoot');
+      const badge = document.getElementById('todayRoundsBadge');
+      const dateLbl = document.getElementById('todayDateLabel');
+      const outcomeBox = document.getElementById('todayOutcomeSection');
+      if (!tbody) return;
+
+      const today = getTodayDateStr();
+      if (dateLbl) dateLbl.innerText = today;
+
+      const all = getDB();
+      const todayRecords = all.filter(r => r.date === today);
+      if (badge) badge.innerText = `${todayRecords.length} جولات مسجلة اليوم`;
+
+      tbody.innerHTML = '';
+      if (todayRecords.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 30px; color: var(--text-dim); font-weight:700;">لم يتم تسجيل أي جولات اليوم بعد. اختر النشاط واضغط تثبيت.</td></tr>`;
+        if (tfoot) tfoot.innerHTML = '';
+        if (outcomeBox) outcomeBox.innerHTML = '<div style="color: var(--text-dim); text-align: center; font-size: 14px;">لا توجد حصيلة مسجلة لهذا اليوم بعد.</div>';
+        return;
+      }
+
+      let totalQuranPages = 0;
+      let totalStudyPages = 0;
+      let totalWords = 0;
+      const trackSummary = {};
+
+      const trackMax = {};
+      const reversedRecords = [...todayRecords].reverse(); 
+      
+      reversedRecords.forEach(r => {
+          if (r.category === 'reading') {
+              let currentMax = trackMax[r.track] || 0;
+              r.deltaFromMax = r.pages - currentMax;
+              r.prevMax = currentMax;
+              if (r.pages > currentMax) {
+                  trackMax[r.track] = r.pages;
+              }
+          }
+      });
+
+      todayRecords.forEach((r, idx) => {
+        let deltaHtml = '<span class="delta-meter delta-eq">-</span>';
+        
+        if (r.category === 'reading') {
+          if (r.prevMax === 0) {
+              deltaHtml = `<span class="delta-meter delta-eq">أول جولة (أساس)</span>`;
+          } else {
+              if (r.deltaFromMax > 0) deltaHtml = `<span class="delta-meter delta-up">+${r.deltaFromMax} ص أعلى إنجاز 🏆</span>`;
+              else if (r.deltaFromMax < 0) deltaHtml = `<span class="delta-meter delta-down">${Math.abs(r.deltaFromMax)} ص عن القمة ⬇️</span>`;
+              else deltaHtml = `<span class="delta-meter delta-eq">ثبات في القمة ⭐️</span>`;
+          }
+        }
+
+        if (r.track && r.track.includes('القرآن') && r.pages) totalQuranPages += r.pages;
+        if (r.track && r.track.includes('المواد الدراسية') && r.pages) totalStudyPages += r.pages;
+        if (r.words) totalWords += r.words;
+
+        const trk = r.track || 'مساق عام';
+        if (!trackSummary[trk]) {
+          trackSummary[trk] = { readingRounds: 0, readingPages: 0, wordsTotal: 0, wordsRounds: 0, barriersCount: 0, otherCount: 0 };
+        }
+        if (r.category === 'reading') {
+          trackSummary[trk].readingRounds++;
+          trackSummary[trk].readingPages += (r.pages || 0);
+        } else if (r.category === 'words_study') {
+          trackSummary[trk].wordsRounds++;
+          trackSummary[trk].wordsTotal += (r.words || 0);
+        } else if (r.category === 'barrier') {
+          trackSummary[trk].barriersCount++;
+        } else {
+          trackSummary[trk].otherCount++;
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="text-align:center; font-family: monospace; font-weight: bold;">${todayRecords.length - idx}</td>
+          <td><span class="badge ${getCategoryBadgeClass(r.category)}">${getCategoryName(r.category)}</span></td>
+          <td><span class="badge ${getTrackBadgeClass(r.track)}">${r.track}</span></td>
+          <td>${r.details}</td>
+          <td style="font-family: monospace; font-weight: 900;">${r.qty}</td>
+          <td>${deltaHtml}</td>
+          <td style="text-align:center;">
+            <button onclick="deleteRecord(${r.id})" class="tool-btn" style="padding: 4px 8px; color: var(--accent-danger);"><i class="fa-solid fa-trash-can"></i></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      if (tfoot) {
+        tfoot.innerHTML = `
+          <tr>
+            <td colspan="3">المجموع الكلي لليوم:</td>
+            <td colspan="4">
+              <div style="display: flex; gap: 16px; flex-wrap: wrap; font-size:14px;">
+                <span>📖 القرآن: <strong style="color: var(--accent-success);">${totalQuranPages} ص</strong></span>
+                <span>🎓 الدراسة: <strong style="color: #38bdf8;">${totalStudyPages} ص</strong></span>
+                <span>📝 اللغات: <strong style="color: #f59e0b;">${totalWords} كلمة</strong></span>
+              </div>
+            </td>
+          </tr>
+        `;
+      }
+
+      if (outcomeBox) {
+        let outcomeHtml = `
+          <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+            <div style="font-weight: 800; font-size: 15px; color: var(--text-main); display: flex; align-items: center; gap: 10px;">
+              <i class="fa-solid fa-calculator" style="color: var(--accent-primary);"></i>
+              <span>الحصيلة اليومية المعتمدة وتفصيل الجولات لكل مساق:</span>
+            </div>
+            <span class="badge info">${todayRecords.length} إجمالي الجولات</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 8px;">
+        `;
+
+        Object.keys(trackSummary).forEach(trkName => {
+          const stats = trackSummary[trkName];
+          let parts = [];
+          
+          if (stats.readingRounds > 0) {
+            const avg = (stats.readingPages / stats.readingRounds).toFixed(1);
+            parts.push(`عملت اليوم <strong style="color:var(--accent-info); font-size:14px;">(${stats.readingRounds})</strong> جولات قراءة، وقرأت <strong style="color:var(--accent-success); font-size:14px;">(${stats.readingPages})</strong> صفحة (بمعدل ${avg} ص/جولة)`);
+          }
+          if (stats.wordsTotal > 0) {
+            parts.push(`حفظت <strong style="color:var(--accent-warning); font-size:14px;">(${stats.wordsTotal})</strong> كلمة عبر (${stats.wordsRounds}) جولات`);
+          }
+          if (stats.barriersCount > 0) {
+            parts.push(`خضت <strong style="color:var(--accent-primary); font-size:14px;">(${stats.barriersCount})</strong> محاولات كسر حواجز`);
+          }
+          if (stats.otherCount > 0) {
+            parts.push(`نفذت (${stats.otherCount}) جلسات إضافية`);
+          }
+
+          if (parts.length > 0) {
+            outcomeHtml += `
+              <div class="outcome-item-badge">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <i class="fa-solid fa-check-circle" style="color: var(--accent-success);"></i>
+                  <span style="font-weight: 800; color: var(--text-main);">${trkName}:</span>
+                  <span style="color: var(--text-muted); font-weight:600;">${parts.join(' | ')}.</span>
+                </div>
+              </div>
+            `;
+          }
+        });
+
+        outcomeHtml += `</div>`;
+        outcomeBox.innerHTML = outcomeHtml;
+      }
+    }
+
+    function renderBarriersBoard() {
+      const container = document.getElementById('milestonesCardsContainer');
+      const kpiGrid = document.getElementById('trackKpiGrid');
+      const countBadge = document.getElementById('barriersCountBadge');
+      if (!container) return;
+
+      const filter = document.getElementById('selBarrierFilter')?.value || 'all';
+      const allBarriers = getDB().filter(r => r.category === 'barrier');
+
+      let filtered = allBarriers;
+      if (filter !== 'all') filtered = filtered.filter(r => r.track === filter);
+
+      if (kpiGrid) {
+        kpiGrid.innerHTML = '';
+        const tracks = ['مساق حفظ القرآن الكريم', 'مساق حفظ الحديث الشريف', 'مساق حفظ موسوعة اللغات', 'مساق حفظ المواد الدراسية'];
+        tracks.forEach(tName => {
+          const tAttempts = allBarriers.filter(r => r.track === tName && r.status === 'مقبول');
+          const brokenSet = new Set(tAttempts.map(r => r.barrierName));
+          const best = [...tAttempts].sort((a,b) => (a.actTime||999) - (b.actTime||999))[0];
+
+          const card = document.createElement('div');
+          card.className = 'kpi-card';
+          card.innerHTML = `
+            <span class="kpi-label">${tName}</span>
+            <span class="kpi-value">${brokenSet.size} / 12</span>
+            <span class="kpi-subtext">أفضل وقت: ${best ? best.actTime + ' دقيقة (' + best.multiplier + ' ضعف)' : 'لم يبدأ بعد'}</span>
+          `;
+          kpiGrid.appendChild(card);
+        });
+      }
+
+      const passedAll = new Set(filtered.filter(r => r.status === 'مقبول').map(r => r.barrierName));
+      if (countBadge) countBadge.innerText = `${passedAll.size} / 12 مكسور بنجاح`;
+
+      container.innerHTML = '';
+      ALL_12_BARRIERS.forEach(barrier => {
+        const matches = filtered.filter(r => r.barrierName === barrier.name || (r.barrierName && r.barrierName.startsWith(barrier.shortName)));
+        const passedAttempts = matches.filter(r => r.status === 'مقبول');
+        const failedAttempts = matches.filter(r => r.status !== 'مقبول');
+        
+        const isBroken = passedAttempts.length > 0;
+        const best = isBroken ? passedAttempts.sort((a,b) => (a.actTime||999) - (b.actTime||999))[0] : null;
+
+        const overAchievementHtml = (isBroken && best && best.actTime < barrier.targetMins) ? 
+            `<div style="color: var(--accent-info); font-weight:800; font-size:12px; margin-top:6px;"><i class="fa-solid fa-rocket"></i> تفوق زمني! كُسر بـ ${best.actTime}د (الهدف ${barrier.targetMins}د)</div>` : '';
+
+        const card = document.createElement('div');
+        card.className = `milestone-card ${isBroken ? 'broken' : ''}`;
+        card.innerHTML = `
+          <div class="milestone-header">
+            <div class="milestone-icon"><i class="fa-solid ${barrier.icon}"></i></div>
+            <span class="badge ${isBroken ? 'success' : (matches.length > 0 ? 'warning' : 'neutral')}">
+              ${isBroken ? 'تم الكسر بنجاح 🏆' : (matches.length > 0 ? 'قيد المحاولة ⏳' : 'لم يبدأ بعد')}
+            </span>
+          </div>
+          <div>
+            <div style="font-weight: 900; font-size: 15px; color: var(--text-main);">${barrier.name}</div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px; font-weight:600;">الهدف: ${barrier.targetMins} دقيقة للصفحة</div>
+            ${overAchievementHtml}
+          </div>
+          
+          <div style="display:flex; justify-content:space-between; align-items:center; border-top: 1px solid var(--border-color); padding-top: 10px; margin-top:4px;">
+            ${isBroken && best ? `
+              <div style="font-size: 12px; width:100%;">
+                <div style="display:flex; justify-content:space-between; font-family:monospace; margin-bottom:4px;">
+                  <span>وقت الكسر: <strong style="color:var(--accent-success);">${best.actTime}د</strong></span>
+                  <span>المضاعفة: <strong>${best.multiplier} ضعف</strong></span>
+                </div>
+                <div style="display:flex; justify-content:space-between; color:var(--text-dim); font-size:11px;">
+                  <span>الإتقان: ${best.accuracy}%</span>
+                  <span style="color: var(--accent-danger); font-weight:700;">إخفاقات للكسر: ${failedAttempts.length}</span>
+                </div>
+              </div>
+            ` : `
+              <div style="font-size:12px; color:var(--text-dim); width:100%; display:flex; justify-content:space-between;">
+                <span>${barrier.desc}</span>
+                ${failedAttempts.length > 0 ? `<span style="color: var(--accent-danger); font-weight:800;">إخفاقات: ${failedAttempts.length}</span>` : ''}
+              </div>
+            `}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderAllLedger() {
+      const tbody = document.getElementById('ledgerTableBody');
+      if (!tbody) return;
+
+      const sortType = document.getElementById('selLedgerSort')?.value || 'date';
+      const filterType = document.getElementById('selLedgerFilter')?.value || 'all';
+
+      const all = getDB();
+      let list = all;
+
+      if (filterType !== 'all') {
+          list = list.filter(r => r.category === filterType);
+      }
+
+      // خوارزمية الفرز (ترتيب السجلات)
+      list.sort((a, b) => {
+          if (sortType === 'date') {
+              return b.id - a.id; // تنازلي حسب التاريخ (ID هو Date.now)
+          } else {
+              // تجميع حسب المساق أبجدياً، ثم داخل كل مساق تنازلياً حسب التاريخ
+              const trackA = a.track || '';
+              const trackB = b.track || '';
+              if (trackA < trackB) return -1;
+              if (trackA > trackB) return 1;
+              return b.id - a.id;
+          }
+      });
+
+      tbody.innerHTML = '';
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 30px; color: var(--text-dim); font-weight:700;">لا توجد سجلات بعد.</td></tr>`;
+        return;
+      }
+
+      list.forEach((r, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="text-align:center; font-family:monospace; font-weight:bold;">${list.length - idx}</td>
+          <td style="font-family:monospace; font-weight:600;">${r.date} <span style="color:var(--text-dim); display:block; font-size: 11px;">${r.time||''}</span></td>
+          <td><span class="badge ${getCategoryBadgeClass(r.category)}">${getCategoryName(r.category)}</span></td>
+          <td><span class="badge ${getTrackBadgeClass(r.track)}">${r.track}</span></td>
+          <td style="font-size:13px;">${r.details}</td>
+          <td style="font-family:monospace; font-weight:900;">${r.qty}</td>
+          <td>${r.status ? `<span class="badge ${r.status==='مقبول'?'success':(r.status==='يحتاج إعادة'?'warning':'danger')}">${r.status} (${r.accuracy||100}%)</span>` : '-'}</td>
+          <td style="text-align:center;" class="hide-in-pdf">
+            <button onclick="deleteRecord(${r.id})" class="tool-btn" style="padding:4px 8px; color:var(--accent-danger);"><i class="fa-solid fa-trash-can"></i></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // دالة إنشاء الأرقام القياسية (التبويب الجديد)
+    function renderRecordsBoard() {
+        const container = document.getElementById('recordsCardsContainer');
+        if (!container) return;
+
+        const db = getDB();
+        const readingRecords = db.filter(r => r.category === 'reading');
+        
+        const trackBests = {};
+        readingRecords.forEach(r => {
+            const trk = r.track || 'مساق غير معروف';
+            if (!trackBests[trk] || r.pages > trackBests[trk].pages) {
+                trackBests[trk] = r;
+            }
+        });
+
+        container.innerHTML = '';
+        const tracks = Object.keys(trackBests);
+        
+        if (tracks.length === 0) {
+            container.innerHTML = '<div style="color: var(--text-muted); font-weight: 700; grid-column: 1/-1;">لم يتم تسجيل أي جولات قراءة بعد ليتم احتساب الأرقام القياسية.</div>';
+            return;
+        }
+
+        tracks.forEach(trk => {
+            const best = trackBests[trk];
+            const avgWords = getTrackWPMMultiplier(trk);
+            const wpm = Math.round((best.pages * avgWords) / 10);
+            
+            const card = document.createElement('div');
+            card.className = 'milestone-card';
+            card.style.borderColor = 'var(--accent-primary)';
+            card.innerHTML = `
+              <div class="milestone-header">
+                <div class="milestone-icon" style="background: var(--accent-primary); color: #fff;"><i class="fa-solid fa-fire"></i></div>
+                <span class="badge ${getTrackBadgeClass(trk)}">${trk}</span>
+              </div>
+              <div style="margin-top: 10px;">
+                <div style="font-size: 13px; color: var(--text-muted); font-weight: 800;">أعلى رقم صفحات مقروءة بـ 10د:</div>
+                <div style="font-size: 28px; font-weight: 900; color: var(--text-main); font-family: monospace;">${best.pages} <span style="font-size:14px; color:var(--text-dim);">صفحة</span></div>
+              </div>
+              <div style="border-top: 1px solid var(--border-color); padding-top: 12px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <div style="font-size: 11px; color: var(--text-muted);">السرعة القصوى التقديرية (WPM)</div>
+                    <div style="font-size: 16px; font-weight: 800; color: var(--accent-info); font-family: monospace;">~${wpm} ك/د</div>
+                </div>
+                <div style="text-align: left;">
+                    <div style="font-size: 11px; color: var(--text-muted);">تاريخ الإنجاز</div>
+                    <div style="font-size: 13px; font-weight: 700;">${best.date}</div>
+                </div>
+              </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function populateComparisonDateSelectors() {
+      const s1 = document.getElementById('selDate1');
+      const s2 = document.getElementById('selDate2');
+      if (!s1 || !s2) return;
+
+      const dates = Array.from(new Set(getDB().map(r => r.date))).sort().reverse();
+      const opts = dates.map(d => `<option value="${d}">${d}</option>`).join('');
+
+      s1.innerHTML = opts;
+      s2.innerHTML = opts;
+      if (dates.length > 1) s2.selectedIndex = 1;
+      runDayComparison();
+    }
+
+    function runDayComparison() {
+      const d1 = document.getElementById('selDate1')?.value;
+      const d2 = document.getElementById('selDate2')?.value;
+      const area = document.getElementById('compareResultsArea');
+      if (!area || !d1 || !d2) return;
+
+      const db = getDB();
+      const r1 = db.filter(r => r.date === d1);
+      const r2 = db.filter(r => r.date === d2);
+
+      const sum1 = { quran: sumPages(r1, 'القرآن'), study: sumPages(r1, 'المواد الدراسية'), words: sumWords(r1), count: r1.length };
+      const sum2 = { quran: sumPages(r2, 'القرآن'), study: sumPages(r2, 'المواد الدراسية'), words: sumWords(r2), count: r2.length };
+
+      area.innerHTML = `
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 16px;">
+          <div class="kpi-card">
+            <span class="kpi-label">صفحات القرآن الكريم</span>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+              <span class="kpi-value">${sum1.quran} ص</span>
+              <span style="font-size:13px; color:var(--text-muted); font-weight:700;">${d2}: ${sum2.quran} ص</span>
+            </div>
+            <div style="margin-top:6px;">${renderDeltaBadge(sum1.quran - sum2.quran, 'ص')}</div>
+          </div>
+
+          <div class="kpi-card">
+            <span class="kpi-label">صفحات المواد الدراسية</span>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+              <span class="kpi-value">${sum1.study} ص</span>
+              <span style="font-size:13px; color:var(--text-muted); font-weight:700;">${d2}: ${sum2.study} ص</span>
+            </div>
+            <div style="margin-top:6px;">${renderDeltaBadge(sum1.study - sum2.study, 'ص')}</div>
+          </div>
+
+          <div class="kpi-card">
+            <span class="kpi-label">كلمات اللغات</span>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+              <span class="kpi-value">${sum1.words}</span>
+              <span style="font-size:13px; color:var(--text-muted); font-weight:700;">${d2}: ${sum2.words}</span>
+            </div>
+            <div style="margin-top:6px;">${renderDeltaBadge(sum1.words - sum2.words, 'كلمة')}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function sumPages(arr, trackMatch) {
+      return arr.filter(r => r.track && r.track.includes(trackMatch) && r.pages).reduce((acc, r) => acc + r.pages, 0);
+    }
+    function sumWords(arr) {
+      return arr.filter(r => r.words).reduce((acc, r) => acc + r.words, 0);
+    }
+    function renderDeltaBadge(diff, unit) {
+      if (diff > 0) return `<span class="delta-meter delta-up">+${diff} ${unit} زيادة ⬆️</span>`;
+      if (diff < 0) return `<span class="delta-meter delta-down">${diff} ${unit} نقصان ⬇️</span>`;
+      return `<span class="delta-meter delta-eq">ثبات الأداء (=)</span>`;
+    }
+
+    function loadDiagTestContent() {
+      const num = document.getElementById('selDiagTest')?.value || '1';
+      const container = document.getElementById('diagTextContainer');
+      const data = DIAG_DATA[num];
+      if (container && data) {
+        container.innerText = `📌 ${data.title}\n📝 الوصف والتعليمات:\n${data.desc}\n\n=========================================\n\n${data.text}`;
+      }
+    }
+
+    function saveDiagTestEntry() {
+      const num = document.getElementById('selDiagTest')?.value || '1';
+      const val = parseInt(document.getElementById('diagResultInput')?.value) || 0;
+      const acc = parseInt(document.getElementById('diagAccuracyInput')?.value) || 100;
+      const data = DIAG_DATA[num];
+
+      const record = {
+        id: Date.now(),
+        date: getTodayDateStr(),
+        time: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }),
+        category: 'diag',
+        track: 'فحص تكميلي',
+        diagNum: num,
+        diagVal: val,
+        accuracy: acc,
+        qty: val,
+        details: `${data.title} (نتيجة: ${val})`
+      };
+
+      const db = getDB();
+      db.unshift(record);
+      saveDB(db);
+      showToast(`تم حفظ نتيجة المقياس ${num} بنجاح!`);
+    }
+
+    function populateReportsDropdown() {
+      const sel = document.getElementById('selReportAttempt');
+      if (!sel) return;
+
+      const barrierAttempts = getDB().filter(r => r.category === 'barrier' && r.status === 'مقبول');
+      if (barrierAttempts.length === 0) {
+        sel.innerHTML = `<option value="">لا توجد محاولات كسر حواجز مقبولة لتوليد تقرير</option>`;
+        document.getElementById('txtReportBox').value = 'يجب كسر الحاجز بنجاح أولاً لتوليد صيغة التقرير المعتمدة.';
+        return;
+      }
+
+      sel.innerHTML = barrierAttempts.map(r => `
+        <option value="${r.id}">${r.date} - ${r.barrierName} (${r.track}) [${r.actTime}د]</option>
+      `).join('');
+      generateSelectedReport();
+    }
+
+    function generateSelectedReport() {
+      const id = parseInt(document.getElementById('selReportAttempt')?.value);
+      const box = document.getElementById('txtReportBox');
+      if (!box) return;
+
+      const record = getDB().find(r => r.id === id);
+      if (!record) return;
+
+      const bObj = ALL_12_BARRIERS.find(b => record.barrierName.includes(b.shortName) || record.barrierName === b.name);
+      const reportTargetTime = bObj ? bObj.targetMins : record.actTime;
+
+      const dayName = getArabicDayName();
+      const pages6h = record.multiplier || Math.round(360 / (reportTargetTime || 5));
+      const days600 = Math.ceil(600 / pages6h);
+      const months600 = (days600 / 30).toFixed(1);
+
+      const report = `🔴 تقرير إثبات الحالة (دورة التدريبات العقلية):
+
+✍️ تم بحمد الله وتوفيقه في هذا اليوم كسر ${record.barrierName} التدريبي البصري.
+✍️ اليوم (${dayName}) بتاريخ ${record.date}
+📌 وقد تم حفظ (1 صفحة كاملة) من ${record.track}
+📌 في وقت وقدره (${reportTargetTime} دقائق)
+📌 وبإتقان وقدره (${record.accuracy}%) - عدد الأخطاء: ${record.errors || 0}
+✍️ وتمت التجربة بنجاح ضمن سياق كسر الحاجز البصري (مقبول وناجح ✅)
+🌸🌸🌸🌸🌸
+
+🟡 التحليل العقلي لكسر الحاجز البصري:
+✍️ بفضل الله وتوفيقه حفظت اليوم صفحة كاملة في مدة زمنية وقدرها (${reportTargetTime} دقائق) وبإتقان مرتفع وقدره (${record.accuracy}%).
+📌 وبناءً على هذا المستوى الذي وصلت إليه فإني أستطيع حفظ الصفحة في مدة (${reportTargetTime} دقائق).
+📌 وبناءً على هذا الواقع الجديد فإني أستطيع في اليوم الافتراضي المقدر بـ 6 ساعات أن أحفظ (${pages6h} صفحة) حفظاً بصرياً.
+📌 وبناءً على هذا الواقع والتجربة العملية، فإني أحتاج إلى (${days600} أيام) لحفظ 600 صفحة حفظاً بصرياً متقناً (وهو ما يعادل ${months600} شهر).
+🚀 نسبة مضاعفة الحفظ عن البداية: (${pages6h} ضعف).
+
+✍️ ملاحظة تفوق: تم تحقيق الكسر الفعلي بوقت أقصر قياسي بلغ (${record.actTime} دقيقة).
+
+✍️ وفقكم الله وسدد خطاكم 🌹`;
+
+      box.value = report;
+    }
+
+    function copyOfficialReport() {
+      const box = document.getElementById('txtReportBox');
+      if (!box || !box.value || box.value.includes('يجب كسر')) return;
+      box.select();
+      document.execCommand('copy');
+      showToast('تم نسخ نص التقرير المعتمد للحافظة بنجاح!');
+    }
+
+    // --- تصدير PDF مخصص ---
+    function exportTableToPDF(tableId, title) {
+        const table = document.getElementById(tableId);
+        if (!table) return;
+
+        const opt = {
+            margin:       [10, 10, 10, 10], // top, left, bottom, right
+            filename:     `${title}_${getTodayDateStr().replace(/\//g,'-')}.pdf`,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
+        };
+        
+        // غلاف مخصص للملف يحتوي على التنسيقات (كي لا يظهر بالوضع الليلي الأسود في الطباعة)
+        const wrap = document.createElement('div');
+        wrap.style.padding = '20px';
+        wrap.style.backgroundColor = '#ffffff';
+        wrap.style.color = '#000000';
+        wrap.style.direction = 'rtl';
+        wrap.style.fontFamily = 'Arial, sans-serif';
+        
+        const header = document.createElement('h2');
+        header.innerText = title;
+        header.style.textAlign = 'center';
+        header.style.marginBottom = '20px';
+        header.style.color = '#1f2937';
+        wrap.appendChild(header);
+
+        // استنساخ الجدول وإزالة عامود "الإجراءات/الحذف"
+        const tableClone = table.cloneNode(true);
+        tableClone.style.width = '100%';
+        tableClone.style.borderCollapse = 'collapse';
+        
+        const ths = tableClone.querySelectorAll('th.hide-in-pdf');
+        ths.forEach(th => th.remove());
+        
+        const trs = tableClone.querySelectorAll('tbody tr');
+        trs.forEach(tr => {
+            const tds = tr.querySelectorAll('td');
+            if (tds.length > 0) tds[tds.length - 1].remove(); // إزالة زر الحذف
+            
+            tr.style.borderBottom = '1px solid #e5e7eb';
+            tds.forEach(td => {
+                td.style.padding = '10px';
+                td.style.fontSize = '12px';
+            });
+        });
+
+        // تنظيف ألوان الـ Badges لتكون مقروءة على خلفية بيضاء
+        const badges = tableClone.querySelectorAll('.badge');
+        badges.forEach(b => {
+            b.style.border = '1px solid #ccc';
+            b.style.color = '#111';
+            b.style.background = '#f3f4f6';
+        });
+
+        wrap.appendChild(tableClone);
+        
+        html2pdf().set(opt).from(wrap).save().then(() => {
+            showToast('تم تصدير ملف PDF بنجاح!');
+        });
+    }
+
+    function exportTableToCSV(tableId, filenamePrefix) {
+        const table = document.getElementById(tableId);
+        if (!table) return;
+
+        let csv = '\uFEFF'; 
+        const rows = table.querySelectorAll('tr');
+        
+        for (let i = 0; i < rows.length; i++) {
+            let row = [], cols = rows[i].querySelectorAll('td:not(.hide-in-pdf), th:not(.hide-in-pdf)');
+            for (let j = 0; j < cols.length; j++) {
+                let data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, ' ').replace(/"/g, '""');
+                row.push('"' + data + '"');
+            }
+            if (row.length > 0) csv += row.join(',') + '\n';
+        }
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `${filenamePrefix}_${getTodayDateStr().replace(/\//g,'-')}.csv`;
+        a.click();
+    }
+
+    function exportCSVGlobal() {
+      const db = getDB();
+      if (db.length === 0) {
+        showToast('لا توجد بيانات لتصديرها.');
+        return;
+      }
+      let csv = "\uFEFFالتاريخ,الوقت,نوع النشاط,المساق,التفاصيل,الكمية,الحالة,نسبة الإتقان\n";
+      db.forEach(r => {
+        csv += `"${r.date}","${r.time||''}","${getCategoryName(r.category)}","${r.track||''}","${r.details||''}","${r.qty||0}","${r.status||'-'}","${r.accuracy||100}%"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `قاعدة_بيانات_التدريبات_${getTodayDateStr().replace(/\//g,'-')}.csv`;
+      a.click();
+    }
+
+    /* ==========================================================
+       Enhanced Timer Engine
+       ========================================================== */
+    let timerInterval = null;
+    let timerSeconds = 600;
+    let originalTotalSeconds = 600;
+    let timerTargetEnd = null;
+    let timerRunning = false;
+    let audioCtx = null;
+    let alarmInterval = null;
+    let isAlarmActive = false;
+    let hasRequestedNotification = false;
+
+    function initAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playBeep() {
+      try {
+        initAudioContext();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.35);
+      } catch (e) {
+        console.warn('Audio Context error:', e);
+      }
+    }
+
+    function startContinuousAlarm() {
+      if (isAlarmActive) return;
+      isAlarmActive = true;
+
+      const banner = document.getElementById('alarmBanner');
+      const btnHeader = document.getElementById('btnHeaderStopAlarm');
+      if (banner) banner.style.display = 'flex';
+      if (btnHeader) btnHeader.style.display = 'inline-flex';
+
+      playBeep();
+      alarmInterval = setInterval(() => {
+        playBeep();
+      }, 700);
+
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification("منظومة التدريبات العقلية", {
+          body: "⏰ انتهى وقت المؤقت المحدد! اضغط لإيقاف التنبيه.",
+          icon: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/svgs/solid/clock.svg"
+        });
+      }
+    }
+
+    function stopAlarm() {
+      if (alarmInterval) {
+        clearInterval(alarmInterval);
+        alarmInterval = null;
+      }
+      isAlarmActive = false;
+      const banner = document.getElementById('alarmBanner');
+      const btnHeader = document.getElementById('btnHeaderStopAlarm');
+      if (banner) banner.style.display = 'none';
+      if (btnHeader) btnHeader.style.display = 'none';
+      showToast('تم إيقاف صوت المنبه.');
+    }
+
+    function updateTimerLabel() {
+      const mins = Math.floor(timerSeconds / 60);
+      const secs = timerSeconds % 60;
+      const formattedTime = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+      
+      const display = document.getElementById('globalTimerDisplay');
+      if (display) display.innerText = formattedTime;
+      
+      const fsDisplay = document.getElementById('fullscreenTimerText');
+      if (fsDisplay) fsDisplay.innerText = formattedTime;
+
+      updateFullscreenVisuals();
+    }
+
+    function updateFullscreenVisuals() {
+      const circle = document.getElementById('fullscreenProgressCircle');
+      if (!circle) return;
+      
+      const circumference = 2 * Math.PI * 200;
+      circle.style.strokeDasharray = `${circumference} ${circumference}`;
+      
+      const percent = timerSeconds / (originalTotalSeconds || 1);
+      const offset = circumference - (percent * circumference);
+      circle.style.strokeDashoffset = offset;
+
+      if (percent > 0.5) circle.style.stroke = "var(--accent-info)";
+      else if (percent > 0.2) circle.style.stroke = "var(--accent-warning)";
+      else circle.style.stroke = "var(--accent-danger)";
+    }
+
+    function openFullscreenTimer() {
+      const overlay = document.getElementById('fullscreenTimerOverlay');
+      if (overlay) overlay.classList.remove('fullscreen-timer-hidden');
+      updateFullscreenVisuals();
+    }
+
+    function closeFullscreenTimer() {
+      const overlay = document.getElementById('fullscreenTimerOverlay');
+      if (overlay) overlay.classList.add('fullscreen-timer-hidden');
+    }
+
+    function onTimerPresetChanged() {
+      const sel = document.getElementById('selTimerBarrierPreset');
+      if (!sel) return;
+      const secs = parseInt(sel.value) || 600;
+      if (timerRunning) toggleTimer();
+      timerSeconds = secs;
+      originalTotalSeconds = secs;
+      updateTimerLabel();
+    }
+
+    function toggleTimer() {
+      initAudioContext();
+      
+      if ("Notification" in window && Notification.permission === "default" && !hasRequestedNotification) {
+        Notification.requestPermission();
+        hasRequestedNotification = true;
+      }
+
+      const btn = document.getElementById('btnTimerControl');
+      if (timerRunning) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        timerTargetEnd = null;
+        if (btn) btn.innerHTML = '<i class="fa-solid fa-play"></i> <span>متابعة</span>';
+      } else {
+        if (timerSeconds <= 0) {
+          onTimerPresetChanged();
+        }
+        timerRunning = true;
+        timerTargetEnd = Date.now() + (timerSeconds * 1000);
+        if (btn) btn.innerHTML = '<i class="fa-solid fa-pause"></i> <span>إيقاف</span>';
+
+        timerInterval = setInterval(() => {
+          const now = Date.now();
+          const remaining = Math.round((timerTargetEnd - now) / 1000);
+
+          if (remaining > 0) {
+            timerSeconds = remaining;
+            updateTimerLabel();
+          } else {
+            timerSeconds = 0;
+            updateTimerLabel();
+            clearInterval(timerInterval);
+            timerRunning = false;
+            timerTargetEnd = null;
+            if (btn) btn.innerHTML = '<i class="fa-solid fa-play"></i> <span>بدء</span>';
+            startContinuousAlarm();
+          }
+        }, 500);
+      }
+    }
+
+    function resetTimer() {
+      if (timerRunning) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        timerTargetEnd = null;
+      }
+      stopAlarm();
+      const sel = document.getElementById('selTimerBarrierPreset');
+      timerSeconds = sel ? parseInt(sel.value) : 600;
+      originalTotalSeconds = timerSeconds;
+      const btn = document.getElementById('btnTimerControl');
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-play"></i> <span>بدء</span>';
+      updateTimerLabel();
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (timerRunning && timerTargetEnd) {
+        const now = Date.now();
+        const remaining = Math.round((timerTargetEnd - now) / 1000);
+        if (remaining <= 0) {
+          timerSeconds = 0;
+          updateTimerLabel();
+          clearInterval(timerInterval);
+          timerRunning = false;
+          timerTargetEnd = null;
+          const btn = document.getElementById('btnTimerControl');
+          if (btn) btn.innerHTML = '<i class="fa-solid fa-play"></i> <span>بدء</span>';
+          startContinuousAlarm();
+        } else {
+          timerSeconds = remaining;
+          updateTimerLabel();
+        }
+      }
+    });
+
+    function deleteRecord(id) {
+      const db = getDB().filter(r => r.id !== id);
+      saveDB(db);
+      showToast('تم حذف السجل المحدد.');
+    }
+
+    function exportJSONBackup() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(getDB(), null, 2));
+      const a = document.createElement('a');
+      a.href = dataStr;
+      a.download = `mental_training_backup_${getTodayDateStr().replace(/\//g,'-')}.json`;
+      a.click();
+    }
+
+    function importJSONBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (Array.isArray(imported)) {
+            saveDB(imported);
+            showToast('تمت استعادة النسخة الاحتياطية بنجاح!');
+          }
+        } catch (err) {
+          showToast('الملف غير صالح.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem(THEME_KEY, next);
+      const btn = document.getElementById('themeToggleBtn');
+      if (btn) btn.innerHTML = next === 'dark' ? '<i class="fa-solid fa-sun"></i> <span>الوضع النهاري</span>' : '<i class="fa-solid fa-moon"></i> <span>الوضع الليلي</span>';
+    }
+
+    function getCategoryName(cat) {
+      const map = { reading: 'جولة قراءة 10د', barrier: 'كسر حاجز', words_study: 'حفظ كلمات/مقررات', diag: 'فحص تكميلي' };
+      return map[cat] || cat;
+    }
+    function getCategoryBadgeClass(cat) {
+      const map = { reading: 'info', barrier: 'warning', words_study: 'neutral', diag: 'neutral' };
+      return map[cat] || 'neutral';
+    }
+
+    function showToast(msg) {
+      let toast = document.getElementById('globalToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'globalToast';
+        toast.style.cssText = 'position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#1e2433; color:#fff; padding:12px 24px; border-radius:10px; border:1px solid #35415c; font-size:14px; font-weight:800; z-index:99999; box-shadow:0 8px 25px rgba(0,0,0,0.4); transition:opacity 0.2s;';
+        document.body.appendChild(toast);
+      }
+      toast.innerText = msg;
+      toast.style.opacity = '1';
+      setTimeout(() => { toast.style.opacity = '0'; }, 3000);
+    }
+
+    function refreshAllViews() {
+      renderTodayTable();
+      renderBarriersBoard();
+      renderAllLedger();
+      populateComparisonDateSelectors();
+      populateReportsDropdown();
+      renderRecordsBoard(); // تحديث الأرقام القياسية
+    }
+
+    window.onload = function() {
+      const savedTheme = localStorage.getItem(THEME_KEY) || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      const btn = document.getElementById('themeToggleBtn');
+      if (btn) btn.innerHTML = savedTheme === 'dark' ? '<i class="fa-solid fa-sun"></i> <span>الوضع النهاري</span>' : '<i class="fa-solid fa-moon"></i> <span>الوضع الليلي</span>';
+
+      onCategoryChanged();
+      loadDiagTestContent();
+      refreshAllViews();
+      updateTimerLabel();
+    };
+  </script>
+</body>
+</html>
